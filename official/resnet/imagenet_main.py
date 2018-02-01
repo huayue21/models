@@ -142,7 +142,7 @@ def synthetic_input_fn(is_training, data_dir, batch_size, num_epochs=1):
 
   dataset = dataset.repeat(num_epochs)
   dataset = dataset.batch(batch_size)
-  iterator = dataset.make_one_shot_iterator()
+  iterator = dataset.make_initializable_iterator()
   images, labels = iterator.get_next()
   return images, labels
 
