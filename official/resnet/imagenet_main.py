@@ -35,7 +35,8 @@ _NUM_IMAGES = {
     'validation': 50000,
 }
 
-_FILE_SHUFFLE_BUFFER = 1024
+_FILE_SHUFFLE_BUFFER = 10000 #1024
+# TODO(karmel): Why are there two separate values used?
 _SHUFFLE_BUFFER = 1500
 
 
@@ -113,7 +114,7 @@ def input_fn(is_training, data_dir, batch_size, num_epochs=1):
   if is_training:
     # When choosing shuffle buffer sizes, larger sizes result in better
     # randomness, while smaller sizes have better performance.
-    dataset = dataset.shuffle(buffer_size=_SHUFFLE_BUFFER)
+    dataset = dataset.shuffle(buffer_size=_FILE_SHUFFLE_BUFFER)
 
   # We call repeat after shuffling, rather than before, to prevent separate
   # epochs from blending together.
@@ -124,6 +125,13 @@ def input_fn(is_training, data_dir, batch_size, num_epochs=1):
   images, labels = iterator.get_next()
   return images, labels
 
+
+def synthetic_input_fn(is_training, data_dir, batch_size, num_epochs=1):
+  """Generates synthetic data to use in training and evaluation. This
+  is useful for removing the input and data I/O elements of training while
+  performance testing.
+  """
+  pass
 
 ###############################################################################
 # Running the model
