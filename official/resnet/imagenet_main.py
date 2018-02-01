@@ -36,8 +36,7 @@ _NUM_IMAGES = {
 }
 
 _FILE_SHUFFLE_BUFFER = 10000 #1024
-# TODO(karmel): Why are there two separate values used?
-_SHUFFLE_BUFFER = 1500
+_IMAGE_SHUFFLE_BUFFER = 128
 
 
 ###############################################################################
@@ -114,7 +113,7 @@ def input_fn(is_training, data_dir, batch_size, num_epochs=1):
   if is_training:
     # When choosing shuffle buffer sizes, larger sizes result in better
     # randomness, while smaller sizes have better performance.
-    dataset = dataset.shuffle(buffer_size=_FILE_SHUFFLE_BUFFER)
+    dataset = dataset.shuffle(buffer_size=_IMAGE_SHUFFLE_BUFFER)
 
   # We call repeat after shuffling, rather than before, to prevent separate
   # epochs from blending together.
