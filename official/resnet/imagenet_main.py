@@ -132,8 +132,8 @@ def synthetic_input_fn(is_training, data_dir, batch_size, num_epochs=1):
   is useful for removing the input and data I/O elements of training while
   performance testing.
   """
-  num_examples = [is_training and _NUM_IMAGES['training']
-                  or _NUM_IMAGES['validation'], ]
+  num_examples = [is_training and _NUM_IMAGES['train']
+                  or _NUM_IMAGES['validation']]
   input_shape = [_DEFAULT_IMAGE_SIZE, _DEFAULT_IMAGE_SIZE, _NUM_CHANNELS]
   feature_vals = tf.random_normal([num_examples + input_shape])
   label_vals = tf.random_uniform(
