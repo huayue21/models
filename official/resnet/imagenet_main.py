@@ -132,7 +132,19 @@ def synthetic_input_fn(is_training, data_dir, batch_size, num_epochs=1):
   is useful for removing the input and data I/O elements of training while
   performance testing.
   """
-  pass
+  num_examples = [is_training and _NUM_IMAGES['training']
+                  or _NUM_IMAGES['validation'], ]
+  input_shape = [_DEFAULT_IMAGE_SIZE, _DEFAULT_IMAGE_SIZE, _NUM_CHANNELS]
+  feature_vals = tf.random_normal([num_examples + input_shape])
+  label_vals = tf.random_uniform(
+      [num_examples], minval=0, maxval=_NUM_CLASSES - 1)
+  dataset = tf.data.Dataset.from_tensor_slices(feature_vals, label_vals)
+
+  dataset = dataset.repeat(num_epochs)
+  dataset = dataset.batch(batch_size)
+  iterator = dataset.make_one_shot_iterator()
+  images, labels = iterator.get_next()
+  return images, labels
 
 ###############################################################################
 # Running the model
@@ -212,7 +224,7 @@ def imagenet_model_fn(features, labels, mode, params):
 
 
 def main(unused_argv):
-  resnet.resnet_main(FLAGS, imagenet_model_fn, input_fn)
+  resnet.resnet_main(FLAGS, imagenet_model_fn, synthetic_input_fn)
 
 
 if __name__ == '__main__':
