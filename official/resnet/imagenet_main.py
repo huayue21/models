@@ -122,7 +122,7 @@ def input_fn(is_training, data_dir, batch_size, num_epochs=1):
   dataset = dataset.repeat(num_epochs)
   dataset = dataset.batch(batch_size)
 
-  iterator = dataset.make_initializable_iterator()
+  iterator = dataset.make_one_shot_iterator()
   images, labels = iterator.get_next()
   return images, labels
 
@@ -132,12 +132,11 @@ def synthetic_input_fn(is_training, data_dir, batch_size, num_epochs=1):
   is useful for removing the input and data I/O elements of training while
   performance testing.
   """
-  num_examples = [is_training and _NUM_IMAGES['train']
-                  or _NUM_IMAGES['validation']]
-  input_shape = [_DEFAULT_IMAGE_SIZE, _DEFAULT_IMAGE_SIZE, _NUM_CHANNELS]
-  feature_vals = tf.random_normal(num_examples + input_shape)
+  input_shape = [batch_size, _DEFAULT_IMAGE_SIZE,
+                 _DEFAULT_IMAGE_SIZE, _NUM_CHANNELS]
+  feature_vals = tf.random_normal(input_shape)
   label_vals = tf.random_uniform(
-      num_examples, minval=0, maxval=_NUM_CLASSES - 1, dtype=tf.int32)
+      [batch_size], minval=0, maxval=_NUM_CLASSES - 1, dtype=tf.int32)
   label_vals = tf.one_hot(label_vals, _NUM_CLASSES)
 
   dataset = tf.data.Dataset.from_tensor_slices((feature_vals, label_vals))
