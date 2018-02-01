@@ -35,8 +35,8 @@ _NUM_IMAGES = {
     'validation': 50000,
 }
 
-_FILE_SHUFFLE_BUFFER = 10000 #1024
-_IMAGE_SHUFFLE_BUFFER = 128
+_FILE_SHUFFLE_BUFFER = 1024
+_IMAGE_SHUFFLE_BUFFER = 1500
 
 
 ###############################################################################
@@ -103,6 +103,7 @@ def input_fn(is_training, data_dir, batch_size, num_epochs=1):
       filenames(is_training, data_dir))
 
   if is_training:
+    # Shuffle the files
     dataset = dataset.shuffle(buffer_size=_FILE_SHUFFLE_BUFFER)
 
   dataset = dataset.flat_map(tf.data.TFRecordDataset)
@@ -111,6 +112,7 @@ def input_fn(is_training, data_dir, batch_size, num_epochs=1):
   dataset = dataset.prefetch(batch_size)
 
   if is_training:
+    # Shuffle the images.
     # When choosing shuffle buffer sizes, larger sizes result in better
     # randomness, while smaller sizes have better performance.
     dataset = dataset.shuffle(buffer_size=_IMAGE_SHUFFLE_BUFFER)
