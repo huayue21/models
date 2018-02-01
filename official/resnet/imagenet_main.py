@@ -138,7 +138,7 @@ def synthetic_input_fn(is_training, data_dir, batch_size, num_epochs=1):
   feature_vals = tf.random_normal(num_examples + input_shape)
   label_vals = tf.random_uniform(
       num_examples, minval=0, maxval=_NUM_CLASSES - 1)
-  dataset = tf.data.Dataset.from_tensor_slices(feature_vals, label_vals)
+  dataset = tf.data.Dataset.from_tensor_slices((feature_vals, label_vals))
 
   dataset = dataset.repeat(num_epochs)
   dataset = dataset.batch(batch_size)
